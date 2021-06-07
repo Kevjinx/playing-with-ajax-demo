@@ -13,7 +13,6 @@ const errorDiv = document.querySelector('.error')
 const scoreDiv = document.querySelector('.score')
 const commentSection = document.querySelector('.comments')
 
-
 const updateImage = async (data) => catPic.src = data.src
 const updateError = async (errText) => errorDiv.innerText = errText
 
@@ -81,24 +80,36 @@ const commentHandler = async (e) => {
 }
 
 const updateComments = data => {
+  console.log('updating comments');
   const commentArr = data.comments
-  console.log(commentArr);
   commentSection.innerHTML = ''
   commentArr.forEach((comment, commentId) => {
-    console.log(commentId);
     const wrapperDiv = document.createElement('div')
     wrapperDiv.classList.add('comment-wrapper')
     wrapperDiv.innerHTML =
-      `<span value='${commentId}' class='comment-span'>${comment}</span>
-      <button class='comment__delete-btn'>delete</button>`;
+      `<span class='comment-span'>${comment}</span>
+      <button value='${commentId}'  class='comment__delete-btn'>delete</button>`;
     commentSection.appendChild(wrapperDiv)
   });
 }
 
 
 
+const deleteCommentHandler = async (event) => {
+  console.log('deleting comments');
+  const id = event.target.value
+
+  const res = await fetch(`/kitten/comments/${id}`, {
+    method: 'DELETE'
+  })
+  if (!res.ok) errorHandling(res)
+  const data = await res.json();
+  updateComments(data)
+}
+
 
 newPicBtn.addEventListener('click', getImageAsync)
 upVoteBtn.addEventListener('click', upVote)
 downVoteBtn.addEventListener('click', downVote)
 submitBtn.addEventListener('click', commentHandler)
+commentSection.addEventListener('click', deleteCommentHandler)
