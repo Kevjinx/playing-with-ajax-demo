@@ -7,10 +7,11 @@ const newPicBtn = document.querySelector('#new-pic')
 const upVoteBtn = document.querySelector('#upvote')
 const downVoteBtn = document.querySelector('#downvote')
 const userComment = document.querySelector('#user-comment')
-const submiteBtn = document.querySelector('#submit-btn')
+const submitBtn = document.querySelector('#submit-btn')
 const loader = document.querySelector('.loader')
 const errorDiv = document.querySelector('.error')
 const scoreDiv = document.querySelector('.score')
+const commentSection = document.querySelector('.comments')
 
 
 const updateImage = async (data) => catPic.src = data.src
@@ -80,9 +81,19 @@ const commentHandler = async (e) => {
 }
 
 const updateComments = data => {
-
+  const commentArr = data.comments
+  console.log(commentArr);
+  commentSection.innerHTML = ''
+  commentArr.forEach((comment, commentId) => {
+    console.log(commentId);
+    const wrapperDiv = document.createElement('div')
+    wrapperDiv.classList.add('comment-wrapper')
+    wrapperDiv.innerHTML =
+      `<span value='${commentId}' class='comment-span'>${comment}</span>
+      <button class='comment__delete-btn'>delete</button>`;
+    commentSection.appendChild(wrapperDiv)
+  });
 }
-
 
 
 
@@ -90,4 +101,4 @@ const updateComments = data => {
 newPicBtn.addEventListener('click', getImageAsync)
 upVoteBtn.addEventListener('click', upVote)
 downVoteBtn.addEventListener('click', downVote)
-submiteBtn.addEventListener('click', commentHandler)
+submitBtn.addEventListener('click', commentHandler)
